@@ -11,5 +11,6 @@ app.get('/', (request, response) => {
 });
 
 app.use('/user', require('./src/controllers/UsersController'));
+app.use('/login', require('./src/controllers/LoginController'));
 
 app.listen(port, () => console.log(`ouvindo porta ${port}!`));
