@@ -1,4 +1,4 @@
 /tests
-/migrations/
-/seeders/
-/models/index.js
+/src/db/migrations/
+/src/db/seeders/
+/src/models/index.js
