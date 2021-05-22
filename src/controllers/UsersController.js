@@ -1,6 +1,6 @@
 const route = require('express').Router();
 
-const { SUCCESS } = require('./status');
+const { SUCCESS, NOT_FOUND } = require('./status');
 
 const { User } = require('../models');
 const UserService = require('../services/UserService');
@@ -13,9 +13,18 @@ route.get('/', authMiddleware, async (req, res) => {
   return res.status(SUCCESS).json(users);
 });
 
-route.use(userMiddleware);
+route.get('/:id', authMiddleware, async (req, res) => {
+  const { id } = req.params;
+  const user = await User.findByPk(id);
+  if (!user) {
+    return res.status(NOT_FOUND).json({
+      message: 'User does not exist',
+    });
+  }
+  return res.status(SUCCESS).json(user);
+});
 
-route.post('/', async (req, res) => {
+route.post('/', userMiddleware, async (req, res) => {
   const { displayName, email, password, image } = req.body;
   const { status, message, payload } = await UserService.create({
     email,
