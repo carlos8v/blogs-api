@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
   try {
     const payload = jwt.verify(auth);
     const user = await User.findOne({ where: { email: payload.email } });
-    req.user = user;
+    req.user = user.dataValues;
     next();
   } catch (error) {
     return res.status(UNAUTHORIZED).json({ message: 'Expired or invalid token' });

@@ -12,7 +12,7 @@ module.exports = {
   create: async ({ displayName, email, password, image }) => {
     const alreadyExists = await User.findOne({ where: { email } });
     if (alreadyExists) {
-      return { status: CONFLICT, message: 'User already registered' };
+      return { status: CONFLICT, err: 'User already registered' };
     }
 
     const trx = await sequelize.transaction();
@@ -24,7 +24,7 @@ module.exports = {
       return { status: CREATED, payload: { token } };
     } catch (error) {
       await trx.rollback();
-      return { status: INTERNAL_ERROR, message: 'Internal error' };
+      return { status: INTERNAL_ERROR, err: 'Internal error' };
     }
   },
 };

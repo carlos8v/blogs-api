@@ -26,13 +26,13 @@ route.get('/:id', authMiddleware, async (req, res) => {
 
 route.post('/', userMiddleware, async (req, res) => {
   const { displayName, email, password, image } = req.body;
-  const { status, message, payload } = await UserService.create({
+  const { status, err, payload } = await UserService.create({
     email,
     image,
     password,
     displayName,
   });
-  if (message) return res.status(status).json({ message });
+  if (err) return res.status(status).json({ message: err });
   return res.status(status).json(payload);
 });
 

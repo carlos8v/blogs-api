@@ -4,8 +4,7 @@ function bodyExists(body) {
   return !!body.displayName && !!body.email && !!body.password && !!body.image;
 }
 
-function getMissingField(body) {
-  const validFields = ['displayName', 'email', 'password', 'image'];
+function getMissingField(body, validFields) {
   return validFields.find((key) => !body[key]);
 }
 
@@ -29,8 +28,10 @@ function getLowLengthField(body) {
 
 module.exports = (req, res, next) => {
   if (!bodyExists(req.body)) {
+    const validFields = ['displayName', 'email', 'password', 'image'];
+    const missingField = getMissingField(req.body, validFields);
     return res.status(BAD_REQUEST).json({
-      message: `"${getMissingField(req.body)}" is required`,
+      message: `"${missingField}" is required`,
     });
   }
 
