@@ -16,9 +16,19 @@ async function createCategoryAssociation(id, categoryIds) {
   })));
 }
 
+const userAttributes = ['id', 'displayName', 'email', 'image'];
+
 module.exports = {
+  findOne: async (postId) => {
+    const post = await Post.findByPk(postId, {
+      include: [
+        { model: User, as: 'user', attributes: userAttributes },
+        { model: Category, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+    return post;
+  },
   findAll: async () => {
-    const userAttributes = ['id', 'displayName', 'email', 'image'];
     const posts = await Post.findAll({
       include: [
         { model: User, as: 'user', attributes: userAttributes },
