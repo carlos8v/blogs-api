@@ -1,4 +1,4 @@
-const { Category, Post } = require('../models');
+const { Category, Post, User, PostCategory } = require('../models');
 const { CREATED, BAD_REQUEST } = require('../controllers/status');
 
 async function checkCategories(categoryList) {
@@ -25,6 +25,8 @@ module.exports = {
       published: now,
       updated: now,
     });
+
+    await createCategoryAssociation(post.dataValues.id, categoryIds);
 
     return { status: CREATED, payload: post };
   },
