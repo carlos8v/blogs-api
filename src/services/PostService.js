@@ -16,11 +16,14 @@ module.exports = {
       return { status: BAD_REQUEST, err: '"categoryIds" not found' };
     }
 
+    const now = new Date();
     const post = await Post.create({
       title,
       content,
       userId,
       categoryIds,
+      published: now,
+      updated: now,
     });
 
     return { status: CREATED, payload: post };

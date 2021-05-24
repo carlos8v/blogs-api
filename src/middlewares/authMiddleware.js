@@ -10,7 +10,7 @@ module.exports = async (req, res, next) => {
 
   try {
     const payload = jwt.verify(auth);
-    const user = await User.findOne({ where: { email: payload.email } });
+    const user = await User.findByPk(payload.id);
     req.user = user.dataValues;
     next();
   } catch (error) {
