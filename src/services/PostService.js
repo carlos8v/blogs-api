@@ -9,7 +9,25 @@ async function checkCategories(categoryList) {
   return categories.every((category) => !!category);
 }
 
+async function createCategoryAssociation(id, categoryIds) {
+  await Promise.all(categoryIds.map((category) => PostCategory.create({
+    postId: id,
+    categoryId: category,
+  })));
+}
+
 module.exports = {
+  findAll: async () => {
+    const userAttributes = ['id', 'displayName', 'email', 'image'];
+    const posts = await Post.findAll({
+      include: [
+        { model: User, as: 'user', attributes: userAttributes },
+        { model: Category, as: 'categories', through: { attributes: [] } },
+      ],
+    });
+
+    return posts;
+  },
   create: async ({ title, content, userId, categoryIds }) => {
     const hasValidCategories = await checkCategories(categoryIds);
     if (!hasValidCategories) {
@@ -21,7 +39,6 @@ module.exports = {
       title,
       content,
       userId,
-      categoryIds,
       published: now,
       updated: now,
     });
